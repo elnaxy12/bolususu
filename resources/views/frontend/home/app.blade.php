@@ -637,7 +637,7 @@
             <button onclick="toggleCart()" class="text-white hover:text-gray-300 text-2xl leading-none">&times;</button>
         </div>
         <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-            <p id="cart-empty" class="text-gray-400 text-center py-12">Keranjang masih kosong 🛒</p>
+            <p id="cart-empty" class="text-gray-400 text-center py-12">Keranjang masih kosong</p>
         </div>
         <div class="p-6 border-t bg-gray-50">
             <div class="flex justify-between mb-4">

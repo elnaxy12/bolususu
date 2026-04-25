@@ -42,7 +42,7 @@ const products = [
         desc: "Perpaduan bolu yang lembut, rasa susu yang khas, dan full keju luar dalam yang melimpah dijamin bikin kamu mau coba lagi dan lagi!",
         price: 46000,
         image: "/images/products/product-5.png",
-        badge: null,
+        badge: "Bolu Gulung",
         tag: "bolu, bolu gulung, oleh oleh khas bandung, oleh oleh khas lembang",
     },
     {
