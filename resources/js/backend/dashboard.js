@@ -1,26 +1,3 @@
-// ── Role Switcher ──
-window.switchRole = function (role) {
-    const body = document.getElementById("appBody");
-    const btnOwner = document.getElementById("btnOwner");
-    const btnKaryawan = document.getElementById("btnKaryawan");
-    const rolePill = document.getElementById("rolePillText");
-    const userRole = document.getElementById("userRole");
-
-    if (role === "owner") {
-        body.classList.remove("role-karyawan");
-        btnOwner.classList.add("active");
-        btnKaryawan.classList.remove("active");
-        rolePill.textContent = "Owner";
-        userRole.textContent = "Owner";
-    } else {
-        body.classList.add("role-karyawan");
-        btnKaryawan.classList.add("active");
-        btnOwner.classList.remove("active");
-        rolePill.textContent = "Karyawan";
-        userRole.textContent = "Karyawan";
-    }
-};
-
 // ── Sidebar collapse ──
 let collapsed = false;
 window.toggleSidebar = function () {
@@ -40,7 +17,7 @@ window.toggleMobile = function () {
     document.body.classList.toggle("sidebar-open", isOpen);
 };
 
-// ── Date ──
+// ── Date + Avatar ──
 document.addEventListener("DOMContentLoaded", function () {
     const days = [
         "Minggu",
@@ -66,16 +43,22 @@ document.addEventListener("DOMContentLoaded", function () {
         "Desember",
     ];
     const now = new Date();
-    document.getElementById("topbarDate").textContent =
-        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 
-    // ── User avatar initials ──
-    const name = document.getElementById("userName").textContent.trim();
-    const initials = name
-        .split(" ")
-        .map((w) => w[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
-    document.getElementById("userAvatar").textContent = initials;
+    const topbarDate = document.getElementById("topbarDate");
+    if (topbarDate) {
+        topbarDate.textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+
+    const userAvatar = document.getElementById("userAvatar");
+    const userName = document.getElementById("userName");
+    if (userAvatar && userName) {
+        const name = userName.textContent.trim();
+        const initials = name
+            .split(" ")
+            .map((w) => w[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
+        userAvatar.textContent = initials;
+    }
 });

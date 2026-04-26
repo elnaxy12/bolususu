@@ -69,17 +69,19 @@
 
         <!-- Produk & Stok -->
         <div class="nav-section-label">Produk & Stok</div>
-        <a class="nav-item {{ request()->routeIs('kelola-produk') ? 'active' : '' }}"
-            href='{{ route('kelola-produk') }}'>
-            <div class="nav-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round">
-                    <path
-                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                </svg>
-            </div>
-            <span class="nav-label">Kelola Produk</span>
-        </a>
+        @if (Auth::check() && Auth::user()->role === 'owner')
+            <a class="nav-item {{ request()->routeIs('kelola-produk') ? 'active' : '' }}"
+                href='{{ route('kelola-produk') }}'>
+                <div class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </svg>
+                </div>
+                <span class="nav-label">Kelola Produk</span>
+            </a>
+        @endif
         <a class="nav-item {{ request()->routeIs('kelola-stok') ? 'active' : '' }}" href='{{ route('kelola-stok') }}'>
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -90,21 +92,23 @@
             <span class="nav-label">Kelola Stok</span>
             <span class="nav-badge">3</span>
         </a>
-        <a class="nav-item {{ request()->routeIs('kelola-kategori') ? 'active' : '' }}"
-            href='{{ route('kelola-kategori') }}'>
-            <div class="nav-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round">
-                    <line x1="8" y1="6" x2="21" y2="6" />
-                    <line x1="8" y1="12" x2="21" y2="12" />
-                    <line x1="8" y1="18" x2="21" y2="18" />
-                    <line x1="3" y1="6" x2="3.01" y2="6" />
-                    <line x1="3" y1="12" x2="3.01" y2="12" />
-                    <line x1="3" y1="18" x2="3.01" y2="18" />
-                </svg>
-            </div>
-            <span class="nav-label">Kelola Kategori</span>
-        </a>
+        @if (Auth::check() && Auth::user()->role === 'owner')
+            <a class="nav-item {{ request()->routeIs('kelola-kategori') ? 'active' : '' }}"
+                href='{{ route('kelola-kategori') }}'>
+                <div class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="8" y1="6" x2="21" y2="6" />
+                        <line x1="8" y1="12" x2="21" y2="12" />
+                        <line x1="8" y1="18" x2="21" y2="18" />
+                        <line x1="3" y1="6" x2="3.01" y2="6" />
+                        <line x1="3" y1="12" x2="3.01" y2="12" />
+                        <line x1="3" y1="18" x2="3.01" y2="18" />
+                    </svg>
+                </div>
+                <span class="nav-label">Kelola Kategori</span>
+            </a>
+        @endif
 
         <!-- Transaksi -->
         <div class="nav-section-label">Transaksi</div>
@@ -140,11 +144,11 @@
     <!-- Footer / User -->
     <div class="sidebar-footer">
         <div class="user-card mx-1">
-            <div class="user-avatar" id="userAvatar">
-                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
-            </div>
-            <div class="user-info">
-                <p id="userName">{{ Auth::user()->name ?? 'Admin BSL' }}</p>
+            <div class="user-avatar" id="userAvatar"></div>
+            <div class="user-info" style="overflow:hidden; min-width:0;">
+                <p id="userName" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    {{ Auth::user()->name ?? 'Admin BSL' }}
+                </p>
                 <span id="userRole">{{ ucfirst(Auth::user()->role) }}</span>
             </div>
             <form method="POST" action="{{ route('logout') }}" style="margin-left:auto;">
