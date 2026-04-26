@@ -5,7 +5,6 @@
 @section('content')
     <div id="appBody">
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobile()"></div>
-        <!-- ═══════════════════ SIDEBAR ═══════════════════ -->            <!-- ═══════════════════ MAIN ═══════════════════ -->
         <div class="main" id="mainContent">
             <!-- Topbar -->
             <div class="topbar">
@@ -19,14 +18,14 @@
                         </svg>
                     </button>
                     <div class="page-title">
-                        <h2>Dashboard</h2>
+                        <h2>@yield('page_title', 'Dashboard')</h2>
                         <p id="topbarDate">Sabtu, 26 April 2025</p>
                     </div>
                 </div>
                 <div class="topbar-right">
                     <div class="role-pill">
                         <div class="role-pill-dot"></div>
-                        <span id="rolePillText">Owner</span>
+                        <span id="rolePillText">{{ ucfirst(Auth::user()->role) }}</span>
                     </div>
                     <button class="top-btn" title="Notifikasi">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -46,25 +45,25 @@
                 <div class="stats-grid" id="statsGrid">
                     <!-- Owner stats -->
                     <div class="stat-card teal owner-only">
-                        <div class="stat-icon">💰</div>
+                        <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
                         <div class="stat-label">Pendapatan Hari Ini</div>
                         <div class="stat-value">Rp 2,4jt</div>
                         <div class="stat-sub"><span class="stat-up">↑ 12%</span> vs kemarin</div>
                     </div>
                     <div class="stat-card gold owner-only">
-                        <div class="stat-icon">📦</div>
+                        <div class="stat-icon"><i class="fas fa-box"></i></div>
                         <div class="stat-label">Total Transaksi</div>
                         <div class="stat-value">38</div>
                         <div class="stat-sub"><span class="stat-up">↑ 5</span> dari kemarin</div>
                     </div>
                     <div class="stat-card navy owner-only">
-                        <div class="stat-icon">👥</div>
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
                         <div class="stat-label">Total Karyawan</div>
                         <div class="stat-value">8</div>
                         <div class="stat-sub">3 shift aktif hari ini</div>
                     </div>
                     <div class="stat-card red owner-only">
-                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="stat-label">Stok Hampir Habis</div>
                         <div class="stat-value">3</div>
                         <div class="stat-sub">Produk perlu restock</div>
@@ -72,25 +71,25 @@
 
                     <!-- Karyawan stats -->
                     <div class="stat-card teal karyawan-only">
-                        <div class="stat-icon">🛒</div>
+                        <div class="stat-icon"><i class="fas fa-cash-register"></i></div>
                         <div class="stat-label">Transaksi Hari Ini</div>
                         <div class="stat-value">14</div>
                         <div class="stat-sub">Shift kamu: 08.00–16.00</div>
                     </div>
                     <div class="stat-card gold karyawan-only">
-                        <div class="stat-icon">📋</div>
+                        <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
                         <div class="stat-label">Item Terjual</div>
                         <div class="stat-value">67</div>
                         <div class="stat-sub">Total loyang hari ini</div>
                     </div>
                     <div class="stat-card red karyawan-only">
-                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="stat-label">Stok Hampir Habis</div>
                         <div class="stat-value">3</div>
                         <div class="stat-sub">Perlu lapor ke owner</div>
                     </div>
                     <div class="stat-card navy karyawan-only">
-                        <div class="stat-icon">🖨️</div>
+                        <div class="stat-icon"><i class="fas fa-print"></i></div>
                         <div class="stat-label">Struk Dicetak</div>
                         <div class="stat-value">14</div>
                         <div class="stat-sub">Hari ini</div>
@@ -123,7 +122,7 @@
                                         <tr>
                                             <td>
                                                 <div class="product-cell">
-                                                    <div class="product-thumb">🍞</div>
+                                                    <div class="product-thumb"><i class="fas fa-bread-slice"></i></div>
                                                     <div>
                                                         <div class="product-name">Bolu Susu Original</div>
                                                         <div class="product-sku">2 loyang</div>
@@ -137,7 +136,7 @@
                                         <tr>
                                             <td>
                                                 <div class="product-cell">
-                                                    <div class="product-thumb">🟢</div>
+                                                    <div class="product-thumb"><i class="fas fa-leaf"></i></div>
                                                     <div>
                                                         <div class="product-name">Bolu Susu Pandan</div>
                                                         <div class="product-sku">1 loyang</div>
@@ -151,7 +150,7 @@
                                         <tr>
                                             <td>
                                                 <div class="product-cell">
-                                                    <div class="product-thumb">🍫</div>
+                                                    <div class="product-thumb"><i class="fas fa-cookie"></i></div>
                                                     <div>
                                                         <div class="product-name">Bolu Susu Coklat</div>
                                                         <div class="product-sku">3 loyang</div>
@@ -165,7 +164,7 @@
                                         <tr>
                                             <td>
                                                 <div class="product-cell">
-                                                    <div class="product-thumb">🍓</div>
+                                                    <div class="product-thumb"><i class="fas fa-seedling"></i></div>
                                                     <div>
                                                         <div class="product-name">Bolu Susu Strawberry</div>
                                                         <div class="product-sku">2 loyang</div>
@@ -179,7 +178,7 @@
                                         <tr>
                                             <td>
                                                 <div class="product-cell">
-                                                    <div class="product-thumb">🍞</div>
+                                                    <div class="product-thumb"><i class="fas fa-bread-slice"></i></div>
                                                     <div>
                                                         <div class="product-name">Bolu Susu Original</div>
                                                         <div class="product-sku">1 loyang</div>
@@ -227,8 +226,8 @@
                                 <!-- Mini bar chart -->
                                 <div style="display:flex; align-items:flex-end; gap:8px; height:70px;">
                                     @php
-                                        $bars = [55, 70, 45, 90, 65, 80, 100];
-                                        $days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+                                    $bars = [55, 70, 45, 90, 65, 80, 100];
+                                    $days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
                                     @endphp
                                     @foreach($bars as $i => $h)
                                         <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;">
@@ -255,27 +254,27 @@
                             </div>
                             <div class="quick-actions" id="quickActions">
                                 <a class="qa-btn">
-                                    <div class="qa-icon">🛒</div>
+                                    <div class="qa-icon"><i class="fas fa-cash-register"></i></div>
                                     <span class="qa-label">Transaksi Baru</span>
                                 </a>
                                 <a class="qa-btn">
-                                    <div class="qa-icon">🖨️</div>
+                                    <div class="qa-icon"><i class="fas fa-print"></i></div>
                                     <span class="qa-label">Cetak Struk</span>
                                 </a>
                                 <a class="qa-btn owner-only">
-                                    <div class="qa-icon">👤</div>
+                                    <div class="qa-icon"><i class="fas fa-user-plus"></i></div>
                                     <span class="qa-label">Tambah Karyawan</span>
                                 </a>
                                 <a class="qa-btn owner-only">
-                                    <div class="qa-icon">📊</div>
+                                    <div class="qa-icon"><i class="fas fa-chart-bar"></i></div>
                                     <span class="qa-label">Export Laporan</span>
                                 </a>
                                 <a class="qa-btn karyawan-only">
-                                    <div class="qa-icon">📦</div>
+                                    <div class="qa-icon"><i class="fas fa-box"></i></div>
                                     <span class="qa-label">Update Stok</span>
                                 </a>
                                 <a class="qa-btn karyawan-only">
-                                    <div class="qa-icon">📋</div>
+                                    <div class="qa-icon"><i class="fas fa-history"></i></div>
                                     <span class="qa-label">Lihat Riwayat</span>
                                 </a>
                             </div>
@@ -289,7 +288,7 @@
                             </div>
                             <div class="stock-list">
                                 <div class="stock-item">
-                                    <div class="stock-emoji">🍞</div>
+                                    <div class="stock-emoji"><i class="fas fa-bread-slice"></i></div>
                                     <div style="flex:1; min-width:0;">
                                         <div class="stock-name">Original</div>
                                         <div class="stock-count">24 loyang tersisa</div>
@@ -302,7 +301,7 @@
                                     <span class="stock-tag ok">Aman</span>
                                 </div>
                                 <div class="stock-item">
-                                    <div class="stock-emoji">🟢</div>
+                                    <div class="stock-emoji"><i class="fas fa-leaf"></i></div>
                                     <div style="flex:1; min-width:0;">
                                         <div class="stock-name">Pandan</div>
                                         <div class="stock-count">8 loyang tersisa</div>
@@ -315,7 +314,7 @@
                                     <span class="stock-tag warn">Menipis</span>
                                 </div>
                                 <div class="stock-item">
-                                    <div class="stock-emoji">🍫</div>
+                                    <div class="stock-emoji"><i class="fas fa-cookie"></i></div>
                                     <div style="flex:1; min-width:0;">
                                         <div class="stock-name">Coklat</div>
                                         <div class="stock-count">3 loyang tersisa</div>
@@ -328,7 +327,7 @@
                                     <span class="stock-tag danger">Kritis</span>
                                 </div>
                                 <div class="stock-item">
-                                    <div class="stock-emoji">🍓</div>
+                                    <div class="stock-emoji"><i class="fas fa-seedling"></i></div>
                                     <div style="flex:1; min-width:0;">
                                         <div class="stock-name">Strawberry</div>
                                         <div class="stock-count">18 loyang tersisa</div>
@@ -341,7 +340,7 @@
                                     <span class="stock-tag ok">Aman</span>
                                 </div>
                                 <div class="stock-item">
-                                    <div class="stock-emoji">🫐</div>
+                                    <div class="stock-emoji"><i class="fas fa-circle"></i></div>
                                     <div style="flex:1; min-width:0;">
                                         <div class="stock-name">Blueberry</div>
                                         <div class="stock-count">5 loyang tersisa</div>
@@ -360,4 +359,5 @@
                 </div>
             </div>
         </div>
-</div @endsection
+    </div>
+@endsection

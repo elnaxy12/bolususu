@@ -112,18 +112,6 @@ body {
     margin-top: 2px;
 }
 
-/* Role switcher */
-.role-switcher {
-    margin: 14px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    padding: 4px;
-    display: flex;
-    gap: 3px;
-    flex-shrink: 0;
-}
-
 .role-btn {
     flex: 1;
     padding: 7px 6px;
@@ -1001,7 +989,6 @@ body.role-karyawan .karyawan-only {
 .sidebar.collapsed .brand-text,
 .sidebar.collapsed .nav-label,
 .sidebar.collapsed .nav-section-label,
-.sidebar.collapsed .role-switcher,
 .sidebar.collapsed .user-info {
     display: none;
 }

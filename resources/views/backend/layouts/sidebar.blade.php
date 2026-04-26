@@ -17,18 +17,12 @@
         </button>
     </div>
 
-    <!-- Role Switcher -->
-    <div class="role-switcher" id="roleSwitcher">
-        <button class="role-btn active" id="btnOwner" onclick="switchRole('owner')">👑 Owner</button>
-        <button class="role-btn" id="btnKaryawan" onclick="switchRole('karyawan')">🧑‍💼 Karyawan</button>
-    </div>
-
     <!-- Nav -->
     <nav class="sidebar-nav">
 
         <!-- Umum -->
         <div class="nav-section-label">Umum</div>
-        <a class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"  href="{{ route('dashboard') }}">
+        <a class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -42,36 +36,41 @@
         </a>
 
         <!-- Owner only -->
-        <div class="nav-section owner-only">
-            <div class="nav-section-label">Manajemen</div>
-            <a class="nav-item {{ request()->routeIs('kelola-karyawan') ? 'active' : '' }}"  href='{{ route('kelola-karyawan') }}'>
-                <div class="nav-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                </div>
-                <span class="nav-label">Kelola Karyawan</span>
-            </a>
-            <a class="nav-item {{ request()->routeIs('laporan-penjualan') ? 'active' : '' }}"  href='{{ route('laporan-penjualan') }}'>
-                <div class="nav-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                    </svg>
-                </div>
-                <span class="nav-label">Laporan Penjualan</span>
-            </a>
-        </div>
+        @if (Auth::check() && Auth::user()->role === 'owner')
+            <div class="nav-section owner-only">
+                <div class="nav-section-label">Manajemen</div>
+                <a class="nav-item {{ request()->routeIs('karyawan.index') ? 'active' : '' }}"
+                    href="{{ route('karyawan.index') }}">
+                    <div class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                    <span class="nav-label">Kelola Karyawan</span>
+                </a>
+                <a class="nav-item {{ request()->routeIs('laporan-penjualan') ? 'active' : '' }}"
+                    href='{{ route('laporan-penjualan') }}'>
+                    <div class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="18" y1="20" x2="18" y2="10" />
+                            <line x1="12" y1="20" x2="12" y2="4" />
+                            <line x1="6" y1="20" x2="6" y2="14" />
+                        </svg>
+                    </div>
+                    <span class="nav-label">Laporan Penjualan</span>
+                </a>
+            </div>
+        @endif
 
         <!-- Produk & Stok -->
         <div class="nav-section-label">Produk & Stok</div>
-        <a class="nav-item {{ request()->routeIs('kelola-produk') ? 'active' : '' }}"  href='{{ route('kelola-produk') }}'>
+        <a class="nav-item {{ request()->routeIs('kelola-produk') ? 'active' : '' }}"
+            href='{{ route('kelola-produk') }}'>
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -81,7 +80,7 @@
             </div>
             <span class="nav-label">Kelola Produk</span>
         </a>
-        <a class="nav-item {{ request()->routeIs('kelola-stok') ? 'active' : '' }}"  href='{{ route('kelola-stok') }}'>
+        <a class="nav-item {{ request()->routeIs('kelola-stok') ? 'active' : '' }}" href='{{ route('kelola-stok') }}'>
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -91,7 +90,8 @@
             <span class="nav-label">Kelola Stok</span>
             <span class="nav-badge">3</span>
         </a>
-        <a class="nav-item {{ request()->routeIs('kelola-kategori') ? 'active' : '' }}"  href='{{ route('kelola-kategori') }}'>
+        <a class="nav-item {{ request()->routeIs('kelola-kategori') ? 'active' : '' }}"
+            href='{{ route('kelola-kategori') }}'>
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -108,7 +108,8 @@
 
         <!-- Transaksi -->
         <div class="nav-section-label">Transaksi</div>
-        <a class="nav-item {{ request()->routeIs('proses-transaksi') ? 'active' : '' }}"  href='{{ route('proses-transaksi') }}'>
+        <a class="nav-item {{ request()->routeIs('proses-transaksi') ? 'active' : '' }}"
+            href='{{ route('proses-transaksi') }}'>
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -119,7 +120,8 @@
             </div>
             <span class="nav-label">Proses Transaksi</span>
         </a>
-        <a class="nav-item {{ request()->routeIs('riwayat-transaksi') ? 'active' : '' }}"  href='{{ route('riwayat-transaksi') }}'>
+        <a class="nav-item {{ request()->routeIs('riwayat-transaksi') ? 'active' : '' }}"
+            href='{{ route('riwayat-transaksi') }}'>
             <div class="nav-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -138,10 +140,12 @@
     <!-- Footer / User -->
     <div class="sidebar-footer">
         <div class="user-card mx-1">
-            <div class="user-avatar" id="userAvatar">AD</div>
+            <div class="user-avatar" id="userAvatar">
+                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+            </div>
             <div class="user-info">
                 <p id="userName">{{ Auth::user()->name ?? 'Admin BSL' }}</p>
-                <span id="userRole">Owner</span>
+                <span id="userRole">{{ ucfirst(Auth::user()->role) }}</span>
             </div>
             <form method="POST" action="{{ route('logout') }}" style="margin-left:auto;">
                 @csrf

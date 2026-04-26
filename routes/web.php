@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Backend\KaryawanController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Guest routes (belum login) ────────────────────────────────────────────
@@ -8,7 +9,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
- 
+
 // ─── Authenticated routes ───────────────────────────────────────────────────
 
 Route::middleware('auth')->group(function () {
@@ -19,9 +20,9 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // Manajemen
-    Route::get('/kelola-karyawan', function () {
-        return view('backend.pages.kelolakaryawan');
-    })->name('kelola-karyawan');
+    Route::resource('kelola-karyawan', KaryawanController::class)
+         ->parameters(['kelola-karyawan' => 'karyawan'])
+         ->names('karyawan');
 
     Route::get('/laporan-penjualan', function () {
         return view('backend.pages.laporan');

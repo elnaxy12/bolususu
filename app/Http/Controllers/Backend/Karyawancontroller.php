@@ -5,21 +5,14 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Karyawan;
 use App\Models\Departemen;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class KaryawanController extends Controller
 {
-    /**
-     * Hanya owner yang boleh akses semua method di controller ini.
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:owner']);
-    }
-
     /* ──────────────────────────────────────────────
      | INDEX — tampilkan daftar karyawan
     ─────────────────────────────────────────────── */
@@ -50,7 +43,7 @@ class KaryawanController extends Controller
         $karyawans    = $query->latest()->paginate(10)->withQueryString();
         $departements = Departemen::orderBy('nama')->get();
 
-        return view('backend.karyawan', compact('karyawans', 'departements'));
+        return view('backend.pages.kelolakaryawan', compact('karyawans', 'departements'));
     }
 
     /* ──────────────────────────────────────────────
@@ -69,14 +62,26 @@ class KaryawanController extends Controller
             'status'        => 'required|in:aktif,nonaktif',
             'alamat'        => 'nullable|string|max:500',
             'foto'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'password'      => 'required|string|min:6',
         ], $this->messages());
+
+        $password = $validated['password'];
+        unset($validated['password']);
 
         // Upload foto
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('karyawan', 'public');
         }
 
-        Karyawan::create($validated);
+        $karyawan = Karyawan::create($validated);
+
+        User::create([
+        'name'     => $karyawan->nama,
+        'email'    => $karyawan->email,
+        'password' => Hash::make($request->password),
+        'role'     => 'karyawan',
+
+        ]);
 
         return redirect()->route('karyawan.index')
                          ->with('success', 'Karyawan berhasil ditambahkan.');
@@ -106,7 +111,20 @@ class KaryawanController extends Controller
             'status'        => 'required|in:aktif,nonaktif',
             'alamat'        => 'nullable|string|max:500',
             'foto'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'password' => 'nullable|string|min:6',
         ], $this->messages());
+
+
+        $user = User::where('email', $karyawan->email)->first();
+        if ($user) {
+            $user->name  = $request->nama;
+            $user->email = $request->email;
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+            $user->save();
+        }
+
 
         // Ganti foto jika ada upload baru
         if ($request->hasFile('foto')) {
@@ -120,6 +138,11 @@ class KaryawanController extends Controller
             unset($validated['foto']);
         }
 
+
+        $password = $validated['password'] ?? null;
+        unset($validated['password']);
+
+
         $karyawan->update($validated);
 
         return redirect()->route('karyawan.index')
@@ -131,6 +154,7 @@ class KaryawanController extends Controller
     ─────────────────────────────────────────────── */
     public function destroy(Karyawan $karyawan)
     {
+        User::where('email', $karyawan->email)->delete();
         // Hapus foto dari storage
         if ($karyawan->foto) {
             Storage::disk('public')->delete($karyawan->foto);

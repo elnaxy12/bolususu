@@ -10,15 +10,20 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('karyawan');
+
+        Schema::create('departemens', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama', 100)->unique();
+            $table->timestamps();
         });
+
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
-        });
+        Schema::dropIfExists('departemens');
     }
 };
