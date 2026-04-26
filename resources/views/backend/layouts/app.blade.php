@@ -27,7 +27,7 @@
     @include('backend.layouts.navbar')
 
     <!-- Content -->
-    <div class="w-full">
+    <div class="w-auto md:w-full">
         @yield('content')
     </div>
 
