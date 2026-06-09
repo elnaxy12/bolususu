@@ -90,7 +90,6 @@
                 </svg>
             </div>
             <span class="nav-label">Kelola Stok</span>
-            <span class="nav-badge">3</span>
         </a>
         @if (Auth::check() && Auth::user()->role === 'owner')
             <a class="nav-item {{ request()->routeIs('kelola-kategori') ? 'active' : '' }}"
