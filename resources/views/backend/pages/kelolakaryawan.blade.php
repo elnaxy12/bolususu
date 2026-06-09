@@ -59,7 +59,7 @@
                         <i class="fas fa-briefcase"></i>
                     </div>
                     <div>
-                        <div class="text-2xl font-bold text-slate-900 leading-none">{{ $departements->count() ?? 0 }}</div>
+                        <div class="text-2xl font-bold text-slate-900 leading-none">{{ $totalDepartemen ?? 0 }}</div>
                         <div class="text-xs text-slate-500 mt-1">Departemen</div>
                     </div>
                 </div>
@@ -97,9 +97,9 @@
                         <select id="filterDept" onchange="filterTable()"
                             class="px-2.5 py-1.5 border border-slate-200 rounded-lg text-sm text-slate-700 bg-white outline-none focus:border-blue-600 cursor-pointer">
                             <option value="">Semua Departemen</option>
-                            <option value="HRD">HRD</option>
-                            <option value="IT">IT</option>
-                            <option value="Marketing">Marketing</option>
+                            <option value="Baker">Baker</option>
+                            <option value="Kasir">Kasir</option>
+                            <option value="Driver">Driver</option>
                             @foreach($departements ?? [] as $d)
                                 <option value="{{ $d->nama }}">{{ $d->nama }}</option>
                             @endforeach
@@ -334,13 +334,12 @@
                                     <select name="departemen" id="fDepartemen" required
                                         class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-800 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all bg-white box-border">
                                         <option value="">— Pilih Departemen —</option>
-                                        <option value="HRD">HRD</option>
-                                        <option value="IT">IT</option>
-                                        <option value="Marketing">Marketing</option>
-                                    </select>
-                                    @foreach($departements ?? [] as $d)
-                                        <option value="{{ $d->nama }}">{{ $d->nama }}</option>
-                                    @endforeach
+                                        <option value="Baker">Baker</option>
+                                        <option value="Kasir">Kasir</option>
+                                        <option value="Driver">Driver</option>
+                                        @foreach($departements ?? [] as $d)
+                                            <option value="{{ $d->nama }}">{{ $d->nama }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div>
@@ -494,7 +493,7 @@
             tc.appendChild(t);
             setTimeout(() => t.remove(), 3500);
         }
-                                            @if(session('success')) showToast("{{ session('success') }}", 'success'); @endif
+        @if(session('success')) showToast("{{ session('success') }}", 'success'); @endif
         @if(session('error'))   showToast("{{ session('error') }}", 'error'); @endif
 
         /* ── Tambah: reset form ── */
@@ -517,7 +516,7 @@
         function editKaryawan(k) {
             document.getElementById('formModalTitle').textContent = 'Edit Karyawan';
             document.getElementById('formMethod').value = 'PUT';
-            document.getElementById('karyawanForm').action = `/karyawan/${k.id}`;
+            document.getElementById('karyawanForm').action = `/kelola-karyawan/${k.id}`;
             document.getElementById('formId').value = k.id;
             document.getElementById('fNama').value = k.nama || '';
             document.getElementById('fNip').value = k.nip || '';
@@ -572,9 +571,9 @@
             ];
             document.getElementById('detailRows').innerHTML = fields.map(([l, v]) =>
                 `<div class="flex gap-2.5 py-2.5 border-b border-slate-100 last:border-0 items-start">
-                                                        <span class="w-32 text-xs font-semibold text-slate-500 shrink-0 pt-0.5">${l}</span>
-                                                        <span class="text-sm text-slate-800 flex-1">${v}</span>
-                                                    </div>`
+                    <span class="w-32 text-xs font-semibold text-slate-500 shrink-0 pt-0.5">${l}</span>
+                    <span class="text-sm text-slate-800 flex-1">${v}</span>
+                </div>`
             ).join('');
             document.getElementById('btnEditFromDetail').onclick = () => { closeModal('modal-detail'); editKaryawan(k); };
             openModal('modal-detail');
@@ -583,7 +582,7 @@
         /* ── Delete ── */
         function confirmDelete(id, nama) {
             document.getElementById('deleteNama').textContent = nama;
-            document.getElementById('deleteForm').action = `/karyawan/${id}`;
+            document.getElementById('deleteForm').action = `/kelola-karyawan/${id}`;
             openModal('modal-delete');
         }
 

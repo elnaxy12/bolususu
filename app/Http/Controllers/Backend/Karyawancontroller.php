@@ -42,8 +42,10 @@ class KaryawanController extends Controller
 
         $karyawans    = $query->latest()->paginate(10)->withQueryString();
         $departements = Departemen::orderBy('nama')->get();
+        $totalDepartemen = Karyawan::distinct('departemen')->count('departemen');
 
-        return view('backend.pages.kelolakaryawan', compact('karyawans', 'departements'));
+         return view('backend.pages.kelolakaryawan', compact('karyawans', 'departements', 'totalDepartemen'));   
+    
     }
 
     /* ──────────────────────────────────────────────
@@ -76,7 +78,8 @@ class KaryawanController extends Controller
         $karyawan = Karyawan::create($validated);
 
         User::create([
-        'name'     => $karyawan->nama,
+        'nama'     => $karyawan->nama,
+        'username'      => $karyawan->nip,
         'email'    => $karyawan->email,
         'password' => Hash::make($request->password),
         'role'     => 'karyawan',
@@ -117,7 +120,7 @@ class KaryawanController extends Controller
 
         $user = User::where('email', $karyawan->email)->first();
         if ($user) {
-            $user->name  = $request->nama;
+            $user->nama  = $request->nama;
             $user->email = $request->email;
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
