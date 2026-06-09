@@ -13,7 +13,9 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'name'     => 'Owner',
+                'nama'     => 'Owner',
+                'username' => 'owner',
+                'email'    => 'admin@gmail.com',
                 'password' => Hash::make('P@55word'),
                 'role'     => 'owner',
             ]
