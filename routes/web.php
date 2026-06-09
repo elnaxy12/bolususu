@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Backend\KaryawanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\KaryawanController;
+use App\Http\Controllers\Backend\StokController;
+
+// Home
+Route::get('/', fn () => view('frontend.home.app'))->name('home');
+
 
 // ─── Guest routes (belum login) ────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -18,7 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn () => view('backend.pages.dashboard'))->name('dashboard');
 
     // Owner + Karyawan
-    Route::get('/kelola-stok', fn () => view('backend.pages.stok'))->name('kelola-stok');
+    Route::get('/kelola-stok', [StokController::class, 'index'])->name('kelola-stok');
+    Route::put('/kelola-stok/{produk}', [StokController::class, 'updateStok'])->name('stok.update');
     Route::get('/proses-transaksi', fn () => view('backend.pages.transaksi'))->name('proses-transaksi');
     Route::get('/riwayat-transaksi', fn () => view('backend.pages.riwayat'))->name('riwayat-transaksi');
 
