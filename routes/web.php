@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\ProdukController;
 use App\Http\Controllers\Backend\KategoriController;
 use App\Http\Controllers\Backend\TransaksiController;
 use App\Http\Controllers\Backend\RiwayatController;
+use App\Http\Controllers\Backend\LaporanController;
 
 // Home
 Route::get('/', fn () => view('frontend.home.app'))->name('home');
@@ -37,7 +38,9 @@ Route::middleware('auth')->group(function () {
             ->parameters(['kelola-karyawan' => 'karyawan'])
             ->names('karyawan');
 
-        Route::get('/laporan-penjualan', fn () => view('backend.pages.laporan'))->name('laporan-penjualan');
+        // Laporan
+        Route::get('/laporan-penjualan', [LaporanController::class, 'index'])->name('laporan-penjualan');
+        Route::get('/laporan-penjualan/export', [LaporanController::class, 'export'])->name('laporan.export');
 
         // Produk
         Route::get('/kelola-produk', [ProdukController::class, 'index'])->name('kelola-produk');
