@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\KategoriController;
 use App\Http\Controllers\Backend\TransaksiController;
 use App\Http\Controllers\Backend\RiwayatController;
 use App\Http\Controllers\Backend\LaporanController;
+use App\Http\Controllers\Backend\DashboardController;
 
 // Home
 Route::get('/', fn () => view('frontend.home.app'))->name('home');
@@ -22,7 +23,7 @@ Route::middleware('guest')->group(function () {
 // ─── Authenticated ──────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/dashboard', fn () => view('backend.pages.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Owner + Karyawan
     Route::get('/kelola-stok', [StokController::class, 'index'])->name('kelola-stok');
