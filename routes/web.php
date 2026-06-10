@@ -6,6 +6,8 @@ use App\Http\Controllers\Backend\KaryawanController;
 use App\Http\Controllers\Backend\StokController;
 use App\Http\Controllers\Backend\ProdukController;
 use App\Http\Controllers\Backend\KategoriController;
+use App\Http\Controllers\Backend\TransaksiController;
+use App\Http\Controllers\Backend\RiwayatController;
 
 // Home
 Route::get('/', fn () => view('frontend.home.app'))->name('home');
@@ -24,8 +26,10 @@ Route::middleware('auth')->group(function () {
     // Owner + Karyawan
     Route::get('/kelola-stok', [StokController::class, 'index'])->name('kelola-stok');
     Route::put('/kelola-stok/{produk}', [StokController::class, 'updateStok'])->name('stok.update');
-    Route::get('/proses-transaksi', fn () => view('backend.pages.transaksi'))->name('proses-transaksi');
-    Route::get('/riwayat-transaksi', fn () => view('backend.pages.riwayat'))->name('riwayat-transaksi');
+    Route::get('/proses-transaksi', [TransaksiController::class, 'index'])->name('proses-transaksi');
+    Route::post('/proses-transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
+    Route::get('/proses-transaksi/struk/{id}', [TransaksiController::class, 'struk'])->name('transaksi.struk');
+    Route::get('/riwayat-transaksi', [RiwayatController::class, 'index'])->name('riwayat-transaksi');
 
     // Owner only
     Route::middleware('role:owner')->group(function () {
