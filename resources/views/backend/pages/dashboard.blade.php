@@ -148,7 +148,9 @@
                         <div class="card owner-only">
                             <div class="card-header">
                                 <span class="card-title">Ringkasan Penjualan — 7 Hari</span>
-                                <a href="{{ route('laporan-penjualan') }}" class="card-action">Export →</a>
+                                @if(Auth::user()->role === 'owner')
+                                    <a href="{{ route('laporan-penjualan') }}" class="card-action">Export →</a>
+                                @endif
                             </div>
                             <div style="padding:20px 22px;">
                                 <div style="display:flex; gap:24px; margin-bottom:18px;">
@@ -230,9 +232,9 @@
                             <div class="stock-list">
                                 @forelse($monitorStok as $p)
                                     @php
-    $pct = $p->stok_minimum > 0 ? min(100, ($p->jumlah_stok / ($p->stok_minimum * 3)) * 100) : 100;
-    $tag = $p->jumlah_stok == 0 ? 'danger' : ($p->jumlah_stok <= $p->stok_minimum ? 'warn' : 'ok');
-    $label = $p->jumlah_stok == 0 ? 'Habis' : ($tag === 'warn' ? 'Menipis' : 'Aman');
+                                        $pct = $p->stok_minimum > 0 ? min(100, ($p->jumlah_stok / ($p->stok_minimum * 3)) * 100) : 100;
+                                        $tag = $p->jumlah_stok == 0 ? 'danger' : ($p->jumlah_stok <= $p->stok_minimum ? 'warn' : 'ok');
+                                        $label = $p->jumlah_stok == 0 ? 'Habis' : ($tag === 'warn' ? 'Menipis' : 'Aman');
                                     @endphp
                                     <div class="stock-item">
                                         <div class="stock-emoji"><i class="fas fa-box"></i></div>
