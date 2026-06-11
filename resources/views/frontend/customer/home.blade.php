@@ -706,7 +706,12 @@
             </div>
         </div>
     </section>
+
+    <script>
+        window.__PRODUCTS__ = @json($produk ?? []);
+    </script>
+
     @push('scripts')
-        @vite('resources/js/frontend/home.js')
+        @vite(['resources/js/frontend/home.js'])
     @endpush
 @endsection

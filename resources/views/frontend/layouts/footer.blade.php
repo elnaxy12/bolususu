@@ -20,3 +20,9 @@
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+@if(session('just_logged_in'))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => mergeCartAfterLogin());
+    </script>
+@endif

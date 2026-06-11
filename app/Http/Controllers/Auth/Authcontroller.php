@@ -62,7 +62,8 @@ class AuthController extends Controller
                 : '/';
 
             return redirect()->intended($defaultRedirect)
-                ->with('success', 'Selamat datang kembali, ' . $user->nama . '!');
+                ->with('success', 'Selamat datang kembali, ' . $user->nama . '!')
+                ->with('just_logged_in', true);
         }
 
         RateLimiter::hit($throttleKey, 60); // lock 60 detik per attempt
@@ -101,7 +102,8 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect('/')
+        ->with('just_logged_in', true);
     }
 
     /**

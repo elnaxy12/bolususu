@@ -9,6 +9,7 @@ class CustomerController extends Controller
 {
     public function home()
     {
-        return view('frontend.customer.home.app');
+        $produk = \App\Models\Produk::where('status', 'aktif')->get();
+        return view('frontend.customer.home', compact('produk'));
     }
 }

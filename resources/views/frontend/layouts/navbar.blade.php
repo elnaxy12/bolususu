@@ -1,7 +1,7 @@
 <nav class="w-full px-6 flex items-center justify-between h-16">
     <!-- Logo -->
     <div class="flex items-center gap-3">
-        <img src="/mnt/user-data/uploads/1776989052530_image.png" onerror="this.style.display='none'"
+        <img src="{{ asset('images/LOGO-BSL-.png') }}" onerror="this.style.display='none'"
             class="h-10 w-auto" alt="Logo" />
 
         <div>

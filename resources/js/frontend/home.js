@@ -1,62 +1,12 @@
 // ---- PRODUCTS DATA ----
-const products = [
-    {
-        id: 1,
-        name: "Alpukat Coklat",
-        desc: "Cobain rasa favorit keluarga dalam varian Alpukat Cokelat, rasa alpukat yang khas berpadu dengan topping coklat lembut dan nikmat.",
-        price: 38000,
-        image: "/images/products/product-1.webp",
-        badge: "Best Seller",
-        tag: "alpukat, alpukat cokelat, bolu susu, cokelat, oleh oleh khas bandung, oleh oleh khas lembang",
-    },
-    {
-        id: 2,
-        name: "Black Forest",
-        desc: "Lapisan bolu full cokelat blackforest dengan tekstur yang lembut dengan lapisan butter cream blueberry dan ditambah taburan cokelat yang lezat dan melimpah, bakal bikin nambah terus!",
-        price: 38000,
-        image: "/images/products/product-2.webp",
-        badge: "Favorit",
-        tag: "blackforest, bolu susu, cokelat, oleh oleh khas bandung, oleh oleh khas lembang, susu cokelat",
-    },
-    {
-        id: 3,
-        name: "Cheese Cake",
-        desc: "Cobain Bolu Susu Lembang varian Cheese Cake. Bolu Susu Lembang dengan lapisan full keju dengan tekstur yang lembut dipenuhi taburan keju yang melimpah.",
-        price: 38000,
-        image: "/images/products/product-3.webp",
-        badge: "New",
-        tag: "bolu susu, keju, oleh oleh khas bandung, oleh oleh khas lembang",
-    },
-    {
-        id: 4,
-        name: "Bolu Gulung Susu Rasa Coklat",
-        desc: "Bolu Gulung Susu yang Lembut dengan Topping Cokelat Parut yang Berlimpah disempurnakan dengan Filling Krim Coklat dan Crumble Biskuit.",
-        price: 46000,
-        image: "/images/products/product-4.png",
-        badge: "Bolu Gulung",
-        tag: "bolu, bolu gulung, oleh oleh khas bandung, oleh oleh khas lembang",
-    },
-    {
-        id: 5,
-        name: "Bolu Gulung Susu Rasa Keju",
-        desc: "Perpaduan bolu yang lembut, rasa susu yang khas, dan full keju luar dalam yang melimpah dijamin bikin kamu mau coba lagi dan lagi!",
-        price: 46000,
-        image: "/images/products/product-5.png",
-        badge: "Bolu Gulung",
-        tag: "bolu, bolu gulung, oleh oleh khas bandung, oleh oleh khas lembang",
-    },
-    {
-        id: 6,
-        name: "Cokelat Mini Pack",
-        desc: "Bolu Susu Lembang varian Cokelat, taburan Keju melimpah berpadu bolu susu rasa cokelat yang lembut nan nikmat dan bikin ketagihan!",
-        price: 20000,
-        image: "/images/products/product-6.jpg",
-        badge: "Paket Hemat",
-        tag: "bolu susu, cokelat, oleh oleh khas bandung, oleh oleh khas lembang, susu cokelat",
-    },
-];
-
-let cart = {};
+const products = (window.__PRODUCTS__ || []).map((p) => ({
+    id: p.id_produk,
+    name: p.nama_produk,
+    desc: p.deskripsi ?? "",
+    price: parseFloat(p.harga),
+    image: p.foto ? `/storage/${p.foto}` : "/images/products/product-0.png",
+    badge: null,
+}));
 
 function formatRp(n) {
     return "Rp " + n.toLocaleString("id-ID");
@@ -121,23 +71,171 @@ function renderProducts() {
 }
 
 // ---- CART LOGIC ----
-window.addToCart = (id) => {
-    const p = products.find((x) => x.id === id);
-    if (cart[id]) {
-        cart[id].qty += 1;
-    } else {
-        cart[id] = { ...p, qty: 1 };
-    }
+const isLoggedIn = () => window.__AUTH__ === true;
+
+// cart sebagai object { id: { id, name, price, image, qty } }
+let cart = {};
+
+async function loadCartFromDB() {
+    if (!isLoggedIn()) return;
+
+    const res = await fetch("/keranjang/data");
+    const items = await res.json();
+
+    items.forEach((item) => {
+        const product = products.find((p) => p.id === item.produk_id);
+        if (!product) return;
+        cart[item.produk_id] = {
+            id: item.produk_id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            qty: item.quantity,
+        };
+    });
+
     updateCartUI();
-    showToast(`${p.name} ditambahkan ke keranjang!`);
+}
+
+window.addToCart = async function (productId) {
+    const product = products.find((p) => p.id === productId);
+    if (!product) return;
+
+    if (isLoggedIn()) {
+        const res = await fetch("/keranjang/tambah", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]',
+                ).content,
+            },
+            body: JSON.stringify({ produk_id: product.id, quantity: 1 }),
+        });
+
+        if (res.ok) {
+            // Sync cart local juga biar UI update
+            if (cart[product.id]) {
+                cart[product.id].qty += 1;
+            } else {
+                cart[product.id] = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    qty: 1,
+                };
+            }
+        }
+    } else {
+        if (cart[product.id]) {
+            cart[product.id].qty += 1;
+        } else {
+            cart[product.id] = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                qty: 1,
+            };
+        }
+
+        // Simpan ke localStorage
+        const localCart = Object.values(cart).map((i) => ({
+            produk_id: i.id,
+            nama: i.name,
+            harga: i.price,
+            quantity: i.qty,
+        }));
+        localStorage.setItem("cart", JSON.stringify(localCart));
+    }
+
+    showToast(`${product.name} ditambahkan ke keranjang!`);
+    updateCartUI();
 };
 
-window.changeQty = (id, delta) => {
+// Load cart dari localStorage saat pertama buka (guest)
+function loadLocalCart() {
+    if (isLoggedIn()) return; // skip kalau sudah login
+    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    localCart.forEach((item) => {
+        const product = products.find((p) => p.id === item.produk_id);
+        if (!product) return;
+        cart[item.produk_id] = {
+            id: item.produk_id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            qty: item.quantity,
+        };
+    });
+    updateCartUI();
+}
+
+window.changeQty = async (id, delta) => {
+    id = parseInt(id);
     if (!cart[id]) return;
+
     cart[id].qty += delta;
-    if (cart[id].qty <= 0) delete cart[id];
+
+    if (isLoggedIn()) {
+        if (cart[id].qty <= 0) {
+            await fetch(`/keranjang/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]',
+                    ).content,
+                },
+            });
+            delete cart[id];
+        } else {
+            await fetch(`/keranjang/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]',
+                    ).content,
+                },
+                body: JSON.stringify({ quantity: cart[id].qty }),
+            });
+        }
+    } else {
+        if (cart[id].qty <= 0) delete cart[id];
+        localStorage.setItem(
+            "cart",
+            JSON.stringify(
+                Object.values(cart).map((i) => ({
+                    produk_id: i.id,
+                    nama: i.name,
+                    harga: i.price,
+                    quantity: i.qty,
+                })),
+            ),
+        );
+    }
+
     updateCartUI();
 };
+
+// Merge localStorage → DB setelah login
+async function mergeCartAfterLogin() {
+    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (localCart.length === 0) return;
+
+    await fetch("/keranjang/merge", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                .content,
+        },
+        body: JSON.stringify({ items: localCart }),
+    });
+
+    localStorage.removeItem("cart");
+}
 
 function updateCartUI() {
     const keys = Object.keys(cart);
@@ -147,12 +245,13 @@ function updateCartUI() {
         0,
     );
 
-    document.getElementById("cart-badge").textContent = totalQty;
-    document.getElementById("nav-cart-count").textContent = totalQty;
+    const badge = document.getElementById("cart-badge");
+    const navCount = document.getElementById("nav-cart-count");
+    if (badge) badge.textContent = totalQty;
+    if (navCount) navCount.textContent = totalQty;
     document.getElementById("cart-total").textContent = formatRp(totalPrice);
 
     const container = document.getElementById("cart-items");
-    const empty = document.getElementById("cart-empty");
 
     if (keys.length === 0) {
         container.innerHTML =
@@ -164,24 +263,20 @@ function updateCartUI() {
         .map((k) => {
             const item = cart[k];
             return `
-                            <div class="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                                <div class="text-3xl">
-                                <img src="${item.image}" 
-                                    class="w-12 h-12 object-contain mx-auto" 
-                                    alt="${item.name}">
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-gray-900 text-sm truncate">${item.name}</p>
-                                    <p class="text-xs text-gray-400">${formatRp(item.price)}/loyang</p>
-                                    <p class="text-sm font-bold mt-0.5" style="color:var(--navy)">${formatRp(item.price * item.qty)}</p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="qty-btn" onclick="changeQty(${k}, -1)">−</div>
-                                    <span class="w-6 text-center font-bold text-gray-800 text-sm">${item.qty}</span>
-                                    <div class="qty-btn" onclick="changeQty(${k}, 1)">+</div>
-                                </div>
-                            </div>
-                          `;
+            <div class="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                <img src="${item.image}" class="w-12 h-12 object-contain" alt="${item.name}">
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-gray-900 text-sm truncate">${item.name}</p>
+                    <p class="text-xs text-gray-400">${formatRp(item.price)}/loyang</p>
+                    <p class="text-sm font-bold mt-0.5" style="color:var(--navy)">${formatRp(item.price * item.qty)}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="qty-btn" onclick="changeQty(${k}, -1)">−</div>
+                    <span class="w-6 text-center font-bold text-gray-800 text-sm">${item.qty}</span>
+                    <div class="qty-btn" onclick="changeQty(${k}, 1)">+</div>
+                </div>
+            </div>
+        `;
         })
         .join("");
 }
@@ -252,3 +347,9 @@ function observeReveal() {
 // ---- INIT ----
 renderProducts();
 observeReveal();
+
+if (isLoggedIn()) {
+    loadCartFromDB();
+} else {
+    loadLocalCart();
+}
