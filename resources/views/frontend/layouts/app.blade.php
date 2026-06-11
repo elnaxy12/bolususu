@@ -20,7 +20,7 @@
 <body>
 
     <!-- Navbar -->
-    @include('layouts.navbar')
+    @include('frontend.layouts.navbar')
 
     <!-- Content -->
     <div>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Footer -->
-    @include('layouts.footer')
+    @include('frontend.layouts.footer')
     @stack('scripts')
     
 </body>

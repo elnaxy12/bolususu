@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('frontend.layouts.app')
 
 @section('title', 'Bolu Susu Lembang - Kelembutan di Setiap Gigitan')
 
@@ -671,12 +671,12 @@
                             <p class="text-gray-400 text-sm">+62 812-3456-7890</p>
                         </div>
                     </a>
-                    <a href="https://instagram.com/bolususu_lembang" target="_blank"
+                    <a href="https://instagram.com/bolulembang" target="_blank"
                         class="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 transition group">
                         <div class="text-3xl">📸</div>
                         <div>
                             <p class="text-white font-semibold group-hover:text-teal-300 transition">Instagram</p>
-                            <p class="text-gray-400 text-sm">@bolususu_lembang</p>
+                            <p class="text-gray-400 text-sm">@bolulembang</p>
                         </div>
                     </a>
                     <div class="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-5">

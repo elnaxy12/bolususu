@@ -10,9 +10,10 @@ use App\Http\Controllers\Backend\TransaksiController;
 use App\Http\Controllers\Backend\RiwayatController;
 use App\Http\Controllers\Backend\LaporanController;
 use App\Http\Controllers\Backend\DashboardController;
-
-// Home
-Route::get('/', fn () => view('frontend.home.app'))->name('home');
+use App\Http\Controllers\Frontend\CustomerController;
+use App\Http\Controllers\Frontend\KeranjangController;
+use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\PesananController;
 
 // ─── Guest ─────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -20,12 +21,19 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-// ─── Authenticated ──────────────────────────────────────────────────────────
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
+Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
+
+
+// ─── Authenticated (semua role) ─────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+// ─── Backend (owner + karyawan) ─────────────────────────────────────────────
+Route::middleware(['auth', 'role:owner,karyawan'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Owner + Karyawan
     Route::get('/kelola-stok', [StokController::class, 'index'])->name('kelola-stok');
     Route::put('/kelola-stok/{produk}', [StokController::class, 'updateStok'])->name('stok.update');
     Route::get('/proses-transaksi', [TransaksiController::class, 'index'])->name('proses-transaksi');
@@ -39,20 +47,30 @@ Route::middleware('auth')->group(function () {
             ->parameters(['kelola-karyawan' => 'karyawan'])
             ->names('karyawan');
 
-        // Laporan
         Route::get('/laporan-penjualan', [LaporanController::class, 'index'])->name('laporan-penjualan');
         Route::get('/laporan-penjualan/export', [LaporanController::class, 'export'])->name('laporan.export');
 
-        // Produk
         Route::get('/kelola-produk', [ProdukController::class, 'index'])->name('kelola-produk');
         Route::post('/kelola-produk', [ProdukController::class, 'store'])->name('produk.store');
         Route::put('/kelola-produk/{produk}', [ProdukController::class, 'update'])->name('produk.update');
         Route::delete('/kelola-produk/{produk}', [ProdukController::class, 'destroy'])->name('produk.destroy');
 
-        // Kategori
         Route::get('/kelola-kategori', [KategoriController::class, 'index'])->name('kelola-kategori');
         Route::post('/kelola-kategori', [KategoriController::class, 'store'])->name('kategori.store');
         Route::put('/kelola-kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
         Route::delete('/kelola-kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
     });
+});
+
+// ─── Frontend Customer ───────────────────────────────────────────────────────
+Route::get('/', [CustomerController::class, 'home']);
+Route::get('/produk', [CustomerController::class, 'produk']);
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/keranjang', [KeranjangController::class, 'index']);
+    Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah']);
+    Route::get('/checkout', [CheckoutController::class, 'index']);
+    Route::post('/checkout', [CheckoutController::class, 'store']);
+    Route::get('/pesanan', [PesananController::class, 'index']);
+    Route::get('/pesanan/{id}', [PesananController::class, 'show']);
 });

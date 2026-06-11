@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -55,8 +56,13 @@ class AuthController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'))
-                ->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
+            $user = Auth::user();
+            $defaultRedirect = in_array($user->role, ['owner', 'karyawan'])
+                ? route('dashboard')
+                : '/';
+
+            return redirect()->intended($defaultRedirect)
+                ->with('success', 'Selamat datang kembali, ' . $user->nama . '!');
         }
 
         RateLimiter::hit($throttleKey, 60); // lock 60 detik per attempt
@@ -64,6 +70,38 @@ class AuthController extends Controller
         throw ValidationException::withMessages([
             'email' => 'Email atau password yang kamu masukkan salah.',
         ]);
+    }
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'nama'     => 'required|string|max:100',
+            'no_hp'    => 'required|string|max:20',
+            'email'    => 'required|email|unique:users,email',
+            'alamat'   => 'required|string|max:255',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'nama'     => $request->nama,
+            'username' => Str::slug($request->nama) . rand(100, 999),
+            'email'    => $request->email,
+            'no_hp'    => $request->no_hp,
+            'alamat'   => $request->alamat,
+            'password' => bcrypt($request->password),
+            'role'     => 'customer',
+            'jabatan'  => '-',
+            'status'   => 'aktif',
+        ]);
+
+        Auth::login($user);
+
+        return redirect('/');
     }
 
     /**
