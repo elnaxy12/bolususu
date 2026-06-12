@@ -12,4 +12,13 @@ class CustomerController extends Controller
         $produk = \App\Models\Produk::where('status', 'aktif')->get();
         return view('frontend.customer.home', compact('produk'));
     }
+
+    public function updateAlamat(Request $request)
+    {
+        $request->validate(['alamat' => 'required|string']);
+
+        auth()->user()->update(['alamat' => $request->alamat]);
+
+        return response()->json(['success' => true]);
+    }
 }

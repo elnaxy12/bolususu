@@ -14,7 +14,7 @@ class KeranjangController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
-        return view('frontend.keranjang', compact('items'));
+        return view('frontend.customer.home', compact('items'));
     }
 
     public function tambah(Request $request)

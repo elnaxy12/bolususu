@@ -64,23 +64,22 @@ Route::middleware(['auth', 'role:owner,karyawan'])->group(function () {
 
 
 // ─── Frontend Customer ───────────────────────────────────────────────────────
-Route::get('/', [CustomerController::class, 'home']);
+Route::get('/', [CustomerController::class, 'home'])->name('home');
 Route::get('/produk', [CustomerController::class, 'produk']);
 
 // Keranjang guest (tidak butuh auth)
 Route::post('/keranjang/merge', [KeranjangController::class, 'merge']); // ← tambah ini
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/keranjang', [KeranjangController::class, 'index']);
-    
-Route::get('/keranjang/data', [KeranjangController::class, 'data']);
+    Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+    Route::get('/keranjang/data', [KeranjangController::class, 'data'])->name('keranjang.data');
+    Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah'])->name('keranjang.tambah');
+    Route::put('/keranjang/{id}', [KeranjangController::class, 'update'])->name('keranjang.update');
+    Route::delete('/keranjang/{id}', [KeranjangController::class, 'hapus'])->name('keranjang.hapus');
 
-    Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah']);
-    Route::put('/keranjang/{id}', [KeranjangController::class, 'update']);    // ← tambah
-    Route::delete('/keranjang/{id}', [KeranjangController::class, 'hapus']); // ← tambah
-    Route::get('/checkout', [CheckoutController::class, 'index']);
-    Route::post('/checkout', [CheckoutController::class, 'store']);
-    Route::get('/pesanan', [PesananController::class, 'index']);
-    Route::get('/pesanan/{id}', [PesananController::class, 'show']);
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::patch('/update-alamat', [CustomerController::class, 'updateAlamat'])->name('update-alamat')->middleware('auth');
+    Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
+    Route::get('/pesanan/{id}', [PesananController::class, 'show'])->name('pesanan.show');
 });
-

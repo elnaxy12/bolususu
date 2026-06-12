@@ -302,17 +302,22 @@ window.toggleCart = () => {
 };
 
 window.checkout = () => {
+    if (!window.__AUTH__) {
+        showToast("Silakan login terlebih dahulu untuk checkout");
+        setTimeout(() => {
+            window.location.href = window.__LOGIN_URL__;
+        }, 1000);
+        return;
+    }
+
     const keys = Object.keys(cart);
     if (keys.length === 0) {
         showToast("Keranjang masih kosong!");
         return;
     }
-    const total = keys.reduce((a, k) => a + cart[k].qty * cart[k].price, 0);
-    const items = keys.map((k) => `${cart[k].name} x${cart[k].qty}`).join(", ");
-    const msg = encodeURIComponent(
-        `Halo Bolu Susu Lembang! Saya ingin memesan:\n${items}\nTotal: ${formatRp(total)}\n\nMohon konfirmasi pesanan saya. Terima kasih!`,
-    );
-    window.open(`https://wa.me/6281234567890?text=${msg}`, "_blank");
+
+    localStorage.setItem("checkout_cart", JSON.stringify(cart));
+    window.location.href = window.__CHECKOUT_URL__;
 };
 
 function showToast(msg) {
