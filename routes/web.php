@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\TransaksiController;
 use App\Http\Controllers\Backend\RiwayatController;
 use App\Http\Controllers\Backend\LaporanController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\PesananController as PesananControllerBE;
 use App\Http\Controllers\Frontend\CustomerController;
 use App\Http\Controllers\Frontend\KeranjangController;
 use App\Http\Controllers\Frontend\CheckoutController;
@@ -36,6 +37,8 @@ Route::middleware(['auth', 'role:owner,karyawan'])->group(function () {
 
     Route::get('/kelola-stok', [StokController::class, 'index'])->name('kelola-stok');
     Route::put('/kelola-stok/{produk}', [StokController::class, 'updateStok'])->name('stok.update');
+    Route::get('/proses-pesanan', [PesananControllerBE::class, 'index'])->name('proses-pesanan');
+    Route::put('/proses-pesanan/{id}/status', [PesananControllerBE::class, 'updateStatus'])->name('pesanan.status.update');
     Route::get('/proses-transaksi', [TransaksiController::class, 'index'])->name('proses-transaksi');
     Route::post('/proses-transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/proses-transaksi/struk/{id}', [TransaksiController::class, 'struk'])->name('transaksi.struk');

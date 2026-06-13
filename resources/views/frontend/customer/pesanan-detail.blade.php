@@ -265,7 +265,7 @@
                         'pending' => '0%',
                         'diproses' => '33%',
                         'dikirim' => '66%',
-                        'selesai' => '100%',
+                        'selesai' => '90%',
                         default => '0%',
                     };
                 @endphp
@@ -361,7 +361,7 @@
                 <div class="card p-6" style="background: var(--navy)">
                     <h3 class="text-white font-semibold mb-3">Butuh Bantuan?</h3>
                     <p class="text-gray-400 text-sm mb-4">Hubungi kami jika ada pertanyaan tentang pesanan ini.</p>
-                    <a href="https://wa.me/6281234567890?text=Halo, saya ingin bertanya tentang pesanan %23{{ $pesanan->id_pesanan }}"
+                    <a href="https://wa.me/6285694576569?text=Halo, saya ingin bertanya tentang pesanan %23{{ $pesanan->id_pesanan }}"
                         target="_blank"
                         class="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-white font-semibold text-sm transition hover:opacity-90"
                         style="background: var(--teal)">

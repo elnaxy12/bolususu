@@ -305,7 +305,7 @@
         </form>
 
         <div class="register-row">
-            Belum punya akun? <a href="#">Hubungi admin</a>
+            Belum punya akun? <a href="{{ route('register') }}">Register</a>
         </div>
 
     </div>
